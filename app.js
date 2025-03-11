@@ -10,6 +10,9 @@ const frequencyData = {
   "apple": 5000, "zebra": 8000, "xylophone": 15000
 };
 
+let successfulSearches = 0;
+let failedSearches = 0;
+
 function estimateUsagePercentage(word) {
     const rank = frequencyData[word.toLowerCase()];
     if (rank) {
@@ -29,60 +32,9 @@ async function fetchDefinition(word) {
         let data = await response.json();
         return data[0]?.meanings[0]?.definitions[0]?.definition || null;
     } catch (error) {
+        console.log(`❌ No definition found for '${word}'`);
+        failedSearches++;
         return null;
-    }
-}
-
-async function startSearch() {
-    const input = document.getElementById("lettersInput").value.trim().toLowerCase();
-    if (!input) {
-        alert("Please enter some letters!");
-        return;
-    }
-
-    document.getElementById('loader').style.display = 'block';
-    document.getElementById('status').innerText = 'Searching...';
-
-    remainingWords = getCombinations(input);
-
-    while (remainingWords.length) {
-        let word = remainingWords.shift();
-        let definition = await fetchDefinition(word);
-        if (definition) {
-            addDefinition(word, definition, foundDefinitions);
-            updateResults("result", foundDefinitions);
-        }
-    }
-
-    document.getElementById('loader').style.display = 'none';
-    document.getElementById('status').innerText = 'Search Complete!';
-}
-
-async function extraSearch(length) {
-    document.getElementById('status').innerText = `Searching for ${length}-letter words...`;
-    
-    const wordsToSearch = remainingWords.filter(word => word.length === length);
-    if (!wordsToSearch.length) {
-        document.getElementById('status').innerText = `No ${length}-letter words found.`;
-        return;
-    }
-
-    for (let word of wordsToSearch) {
-        let definition = await fetchDefinition(word);
-        if (definition) {
-            addDefinition(word, definition, extraDefinitions);
-            updateResults("extraResult", extraDefinitions);
-        }
-    }
-
-    document.getElementById('status').innerText = `Search for ${length}-letter words complete!`;
-}
-
-function addDefinition(word, definition, target) {
-    const length = word.length;
-    if (!target[length]) target[length] = [];
-    if (!target[length].some(entry => entry.word === word)) {
-        target[length].push({ word, definition, usage: estimateUsagePercentage(word) });
     }
 }
 
@@ -96,3 +48,33 @@ function updateResults(targetId, source) {
             ).join("<br>")
         ).join("<br>");
 }
+
+function updateStatus(message) {
+    document.getElementById('status').innerText = message;
+}
+
+async function startSearch() {
+    const input = document.getElementById("lettersInput").value.trim().toLowerCase();
+    if (!input) {
+        alert("Please enter some letters!");
+        return;
+    }
+
+    foundDefinitions = {};
+    successfulSearches = 0;
+    failedSearches = 0;
+
+    updateStatus("🔎 Starting search...");
+    document.getElementById('loader').style.display = 'block';
+
+    remainingWords = getCombinations(input);
+
+    while (remainingWords.length) {
+        let word = remainingWords.shift();
+        console.log(`🔎 Searching definition for: ${word}`);
+
+        let definition = await fetchDefinition(word);
+        if (definition) {
+            addDefinition(word, definition, foundDefinitions);
+            successfulSearches++;
+            upd
