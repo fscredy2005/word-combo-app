@@ -11,8 +11,12 @@
 
     <h1>🔡 Word Combination App</h1>
     <input type="text" id="lettersInput" placeholder="Enter letters..." />
-    <button onclick="startSearch()">Generate</button>
+    <button onclick="startSearch()" id="searchButton">Generate</button>
     <div class="timer" id="timer"></div>
+    <div id="status"></div>
+
+    <!-- Loading Spinner -->
+    <div class="loader" id="loader"></div>
 
     <div class="frame-container">
         <div class="frame">
