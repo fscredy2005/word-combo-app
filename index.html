@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Word Combination App (PWA)</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <h1>Generate Word Combinations and Definitions</h1>
+    <input type="text" id="lettersInput" placeholder="Enter letters" />
+    <button onclick="startSearch()">Generate</button>
+    <div class="timer" id="timer"></div>
+
+    <div class="frame-container">
+        <div class="frame">
+            <h2>Background Search Results</h2>
+            <div class="result" id="result"></div>
+        </div>
+
+        <div class="frame">
+            <h2>Extra Search Results</h2>
+            <div class="extra-result" id="extraResult"></div>
+        </div>
+    </div>
+
+    <div class="extra-buttons">
+        <button onclick="extraSearch(3)">Extra Search for 3-Letter Words</button>
+        <button onclick="extraSearch(4)">Extra Search for 4-Letter Words</button>
+        <button onclick="extraSearch(5)">Extra Search for 5-Letter Words</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
